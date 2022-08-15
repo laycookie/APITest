@@ -1,8 +1,8 @@
-const name = "ping";
-const description = "Sends ping in the chat.";
+const name = "example name;
+const description = "Example description.";
 const permissions: string[] = [];
 const execute = () => {
-    console.log("pong!");
+    console.log("Your code!");
 };
 
 export { name, description, permissions, execute };
