@@ -1,5 +1,10 @@
 import fs from "fs";
-import { SlashCommandBuilder, Routes } from "discord.js";
+import {
+    SlashCommandBuilder,
+    Routes,
+    ChatInputCommandInteraction,
+    CacheType,
+} from "discord.js";
 import { REST } from "@discordjs/rest";
 import "dotenv/config";
 
@@ -28,13 +33,20 @@ rest.put(Routes.applicationCommands(process.env.clientId), { body: [] })
     .then(() => console.log("Successfully deleted all application commands."))
     .catch(console.error);
 
+// ===prep to export basic command info to index===
+interface basicCommandInfo {
+    name: string;
+    execute: (arg0: ChatInputCommandInteraction<CacheType>) => void;
+}
+const commandsCode: basicCommandInfo[] = [];
+
 // ===ADDING A NEW COMMAND===
 const commands = [];
-
 for (let i = 0; i < fs.readdirSync("./src/commands").length; i++) {
     const command: string = fs.readdirSync("./src/commands")[i];
     // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
-    const { name, description } = require(`./commands/${command}`);
+    const { name, description, execute } = require(`./commands/${command}`);
+    commandsCode.push({ name, execute });
 
     commands.push(
         new SlashCommandBuilder().setName(name).setDescription(description),
@@ -47,3 +59,6 @@ rest.put(
 )
     .then(() => console.log("Successfully registered application commands."))
     .catch(console.error);
+
+// Exporting names and code of commands for use in index.ts
+export { commandsCode };

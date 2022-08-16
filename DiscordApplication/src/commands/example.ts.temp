@@ -1,8 +1,0 @@
-const name = "example name;
-const description = "Example description.";
-const permissions: string[] = [];
-const execute = () => {
-    console.log("Your code!");
-};
-
-export { name, description, permissions, execute };
