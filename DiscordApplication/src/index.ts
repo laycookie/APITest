@@ -15,9 +15,12 @@ client.on("interactionCreate", async (interaction) => {
 
     const { commandName } = interaction;
 
-    await commandsCode
-        .find((command) => commandName === command.name)
-        ?.execute(interaction);
+    for (const command of commandsCode) {
+        if (commandName === command.name) {
+            command.execute(interaction);
+            break;
+        }
+    }
 });
 
 // Login to Discord with your client's token
