@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <p>{{ response }}</p>
+  </body>
+  {% block scripts %}
+  <script>
+    const parrentWindow = window.opener;
+    console.log("{{ response.access_token }}");
+    let dataPackage = {
+      isOAuthInfo: true,
+      oAuthInfo: {
+        access_token: "{{ response.access_token }}",
+        refresh_token: "{{ response.refresh_token }}",
+        expires_in: "{{ response.expires_in }}",
+        token_type: "{{ response.token_type }}",
+      },
+    };
+
+    parrentWindow.postMessage(dataPackage);
+  </script>
+  {% endblock scripts %}
+</html>

@@ -6,7 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
+      "/discordOAuth": {
+        target: "http://127.0.0.1:5000",
+      },
+      "/apiTest": {
         target: "http://127.0.0.1:5000",
       },
     },
