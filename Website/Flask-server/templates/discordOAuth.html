@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <body>
-    <p>{{ response }}</p>
-  </body>
+  <body></body>
   {% block scripts %}
   <script>
     const parrentWindow = window.opener;
@@ -18,6 +16,7 @@
     };
 
     parrentWindow.postMessage(dataPackage);
+    window.close();
   </script>
   {% endblock scripts %}
 </html>
