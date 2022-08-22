@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+import pymongo
 import requests
 import json
 
@@ -32,9 +33,29 @@ def discordOAuth():
     # return response.json()
     return render_template("discordOAuth.html", response=response.json())
 
-@app.route('/apiTest')
+@app.route('/serverData')
 def apiTest():
-    return {"testData": "test"}
+    serverName = request.args.get("serverName")
+    # db setup
+    client = pymongo.MongoClient(botInfo["mongoDBURI"])
+    try:
+        db = client["DiscordServerList"]
+        if serverName == None:
+            return {"Error": 'Error: No server name provided'}
+
+        # check if server exists in db
+        collection = None
+        for server in db.list_collection_names():
+            if server == serverName:
+                collection = server
+                break
+        
+        return {"ServerName": collection}
+    except:
+        return {"ServerName": 'Error in /serverData'}
+
+
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

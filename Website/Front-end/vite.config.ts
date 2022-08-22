@@ -9,7 +9,7 @@ export default defineConfig({
       "/discordOAuth": {
         target: "http://127.0.0.1:5000",
       },
-      "/apiTest": {
+      "/serverData": {
         target: "http://127.0.0.1:5000",
       },
     },

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import ServerDashBoard from "./ServerDashBoard";
+
 interface basicProfileData {
   accent_color: string;
   avatar: string;
@@ -28,6 +30,7 @@ export default function authorize({ tokenData }: any) {
   const [basicProfileData, setBasicProfileData] =
     useState<basicProfileData | null>(null);
   const [guilds, setGuilds] = useState<guilds[] | null>(null);
+  const [adminGuilds, setAdminGuilds] = useState<guilds[]>([]);
 
   const permisionsObject = {
     CREATE_INSTANT_INVITE: 1,
@@ -278,12 +281,12 @@ export default function authorize({ tokenData }: any) {
     for (const guild of guilds) {
       for (const perm of intPermsToStringArr(guild.permissions)) {
         if (perm === "ADMINISTRATOR") {
-          console.log(guild);
-          console.log("display admin pannel");
+          setAdminGuilds((cur) => [...cur, guild]);
         }
       }
     }
   }, [guilds]);
+
   return (
     <>
       {basicProfileData ? (
@@ -298,6 +301,8 @@ export default function authorize({ tokenData }: any) {
             alt="avatar"
           />
           <p>{basicProfileData?.username}</p>
+
+          <ServerDashBoard servers={adminGuilds} />
         </>
       ) : (
         "Loading..."
