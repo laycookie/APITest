@@ -12,6 +12,9 @@ export default defineConfig({
       "/serverData": {
         target: "http://127.0.0.1:5000",
       },
+      "/serverRetrive": {
+        target: "http://127.0.0.1:5000",
+      },
     },
   },
 });

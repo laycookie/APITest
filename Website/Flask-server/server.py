@@ -34,7 +34,7 @@ def discordOAuth():
     return render_template("discordOAuth.html", response=response.json())
 
 @app.route('/serverData')
-def apiTest():
+def serverData():
     serverName = request.args.get("serverName")
     # db setup
     client = pymongo.MongoClient(botInfo["mongoDBURI"])
@@ -55,7 +55,16 @@ def apiTest():
         return {"ServerName": 'Error in /serverData'}
 
 
-    
+@app.route('/serverRetrive')
+def serverRetrive():
+    serverName = request.args.get("serverName")
+    userToken = request.args.get("userToken")
+
+    #verifyes that user has acesses to the server
+
+    #retrive the server settings json
+
+    return {"ErrorCode": 200}
 
 if __name__ == '__main__':
     app.run(debug=True)

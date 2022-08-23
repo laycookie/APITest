@@ -302,7 +302,7 @@ export default function authorize({ tokenData }: any) {
           />
           <p>{basicProfileData?.username}</p>
 
-          <ServerDashBoard servers={adminGuilds} />
+          <ServerDashBoard servers={adminGuilds} tokenData={tokenData} />
         </>
       ) : (
         "Loading..."

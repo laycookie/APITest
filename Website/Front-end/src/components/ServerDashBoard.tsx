@@ -10,7 +10,13 @@ interface guilds {
   permissions: string;
 }
 
-export default function ServerDashBoard({ servers }: { servers: guilds[] }) {
+export default function ServerDashBoard({
+  servers,
+  tokenData,
+}: {
+  servers: guilds[];
+  tokenData: any;
+}) {
   const dashBoardOfAllServers = useRef<HTMLUListElement>(null);
   useEffect(() => {
     if (servers.length != 0) {
@@ -41,6 +47,13 @@ export default function ServerDashBoard({ servers }: { servers: guilds[] }) {
             serverButtonEl.innerHTML = "Settings";
             serverButtonEl.addEventListener("click", () => {
               console.log("UPDATE TO SETTINGS");
+              fetch(
+                `/serverRetrive?serverName=${server.name}&userToken=${tokenData.access_token}`
+              ).then((res) => {
+                res.json().then((data) => {
+                  console.log(data);
+                });
+              });
             });
             serverEl.appendChild(serverNameEl);
             serverEl.appendChild(serverButtonEl);
