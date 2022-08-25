@@ -27,11 +27,12 @@ export default function ServerDashBoard({
   useEffect(() => {
     if (dashBoardOfAllServers === null) return;
     servers.map((server: guilds) => {
-      fetch(`/serverData?serverName=${server.name}`).then((res) =>
+      fetch(`/serverData?serverId=${server.id}`).then((res) =>
         res.json().then((data) => {
           const serverEl = document.createElement("li");
           const serverNameEl = document.createElement("h5");
           const serverButtonEl = document.createElement("button");
+          console.log(data);
           if (data.ServerName === null) {
             serverNameEl.innerHTML = server.name;
             serverButtonEl.innerHTML = "Add to server";

@@ -10,11 +10,10 @@ const DBClient = new MongoClient(uri);
 const database = DBClient.db("DiscordServerList");
 
 function ifDBExistElseCreate(guild: any) {
-    database.listCollections({ name: guild.name }).next((err, collinfo) => {
+    database.listCollections({ name: guild.id }).next((err, collinfo) => {
         if (err) throw err;
         else if (collinfo === null) {
-            database.collection(guild.name).insertOne({ serverID: guild.id });
-            database.collection(guild.name).insertOne(newServerDeployDefault);
+            database.collection(guild.id).insertOne(newServerDeployDefault);
         }
     });
 }

@@ -43,18 +43,18 @@ def discordOAuth():
 
 @app.route('/serverData')
 def serverData():
-    serverName = request.args.get("serverName")
+    serverId = request.args.get("serverId")
     # db setup
     client = pymongo.MongoClient(botInfo["mongoDBURI"])
     try:
         db = client["DiscordServerList"]
-        if serverName == None:
+        if serverId == None:
             return {"Error": 'Error: No server name provided'}
 
         # check if server exists in db
         collection = None
         for server in db.list_collection_names():
-            if server == serverName:
+            if server == serverId:
                 collection = server
                 break
         
@@ -82,7 +82,10 @@ def serverRetrive():
     #retrive the server settings json
     collection = None
     for serv in res:
-        return {"test": serv["id"]}
+        for server in db.list_collection_names():
+            return {"isUserOnServer": server}
+            if (server == serv):
+                return {"isUserOnServer": True}
 
     return {"ErrorCode": 500}
 
