@@ -9,11 +9,12 @@ const uri = `mongodb+srv://${process.env.DBUserName}:${process.env.Password}@clu
 const DBClient = new MongoClient(uri);
 const database = DBClient.db("DiscordServerList");
 
-function ifDBExistElseCreate(serverName: string) {
-    database.listCollections({ name: serverName }).next((err, collinfo) => {
+function ifDBExistElseCreate(guild: any) {
+    database.listCollections({ name: guild.name }).next((err, collinfo) => {
         if (err) throw err;
         else if (collinfo === null) {
-            database.collection(serverName).insertOne(newServerDeployDefault);
+            database.collection(guild.name).insertOne({ serverID: guild.id });
+            database.collection(guild.name).insertOne(newServerDeployDefault);
         }
     });
 }
@@ -39,9 +40,9 @@ client.once("ready", () => {
     });
 
     // Verifying that all servers are in the database
-    const guildsArr: string[] = [];
+    const guildsArr: any[] = [];
     client.guilds.cache.forEach((guild) => {
-        guildsArr.push(guild.name);
+        guildsArr.push(guild);
     });
     for (const guild of guildsArr) {
         ifDBExistElseCreate(guild);
@@ -55,7 +56,7 @@ client.on("guildCreate", (guild) => {
     );
 
     const newServer = guild;
-    ifDBExistElseCreate(newServer.name);
+    ifDBExistElseCreate(guild);
 });
 
 // Login to Discord with your client's token

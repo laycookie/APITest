@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import pymongo
 import requests
 import json
@@ -7,6 +7,15 @@ with open('botinfo.json') as f:
   botInfo = json.load(f)
 
 app = Flask(__name__)
+
+def askForUserServerList(TOKEN, token_type):
+    API_ENDPOINT = 'https://discord.com/api/v10'
+
+    headers = {
+        "authorization": str(token_type) + " " + str(TOKEN)
+    }
+    res = requests.get(API_ENDPOINT + "/users/@me/guilds", headers=headers)
+    return res.json()
 
 @app.route('/discordOAuth')
 def discordOAuth():
@@ -30,7 +39,6 @@ def discordOAuth():
     # post req
     response = requests.post(API_ENDPOINT + "/oauth2/token", data=body, headers=headers)
 
-    # return response.json()
     return render_template("discordOAuth.html", response=response.json())
 
 @app.route('/serverData')
@@ -57,14 +65,26 @@ def serverData():
 
 @app.route('/serverRetrive')
 def serverRetrive():
-    serverName = request.args.get("serverName")
+    serverId = request.args.get("serverId")
     userToken = request.args.get("userToken")
+    token_type = request.args.get("token_type")
 
+    client = pymongo.MongoClient(botInfo["mongoDBURI"])
+    try:
+        db = client["DiscordServerList"]
+
+    except:
+         return {"Error": 'Error: No server name provided'}
     #verifyes that user has acesses to the server
+    res = askForUserServerList(userToken, token_type)
+    
 
     #retrive the server settings json
+    collection = None
+    for serv in res:
+        return {"test": serv["id"]}
 
-    return {"ErrorCode": 200}
+    return {"ErrorCode": 500}
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -48,7 +48,7 @@ export default function ServerDashBoard({
             serverButtonEl.addEventListener("click", () => {
               console.log("UPDATE TO SETTINGS");
               fetch(
-                `/serverRetrive?serverName=${server.name}&userToken=${tokenData.access_token}`
+                `/serverRetrive?serverId=${server.id}&userToken=${tokenData.access_token}&token_type=${tokenData.token_type}`
               ).then((res) => {
                 res.json().then((data) => {
                   console.log(data);
