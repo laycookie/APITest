@@ -18,21 +18,26 @@ if (
 }
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+if (false) {
+    // ===REMOVING ALL COMMANDS===
+    // for guild-based commands
+    rest.put(
+        Routes.applicationGuildCommands(
+            process.env.clientId,
+            process.env.guildId,
+        ),
+        { body: [] },
+    )
+        .then(() => console.log("Successfully deleted all guild commands."))
+        .catch(console.error);
 
-// ===REMOVING ALL COMMANDS===
-// for guild-based commands
-rest.put(
-    Routes.applicationGuildCommands(process.env.clientId, process.env.guildId),
-    { body: [] },
-)
-    .then(() => console.log("Successfully deleted all guild commands."))
-    .catch(console.error);
-
-// for global commands
-rest.put(Routes.applicationCommands(process.env.clientId), { body: [] })
-    .then(() => console.log("Successfully deleted all application commands."))
-    .catch(console.error);
-
+    // for global commands
+    rest.put(Routes.applicationCommands(process.env.clientId), { body: [] })
+        .then(() =>
+            console.log("Successfully deleted all application commands."),
+        )
+        .catch(console.error);
+}
 // ===prep to export basic command info to index===
 interface basicCommandInfo {
     name: string;
@@ -46,7 +51,10 @@ for (let i = 0; i < fs.readdirSync("./src/commands").length; i++) {
     const command: string = fs.readdirSync("./src/commands")[i];
     // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
     const { name, description, execute } = require(`./commands/${command}`);
-    commandsCode.push({ name, execute });
+    if (true) {
+        // Creates command for guild
+        commandsCode.push({ name, execute });
+    }
 
     commands.push(
         new SlashCommandBuilder().setName(name).setDescription(description),

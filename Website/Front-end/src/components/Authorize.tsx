@@ -280,7 +280,7 @@ export default function authorize({ tokenData }: any) {
     if (!guilds) return;
     for (const guild of guilds) {
       for (const perm of intPermsToStringArr(guild.permissions)) {
-        if (perm === "ADMINISTRATOR") {
+        if (perm === "SPEAK") {
           setAdminGuilds((cur) => [...cur, guild]);
         }
       }

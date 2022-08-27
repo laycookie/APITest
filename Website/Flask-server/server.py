@@ -76,18 +76,47 @@ def serverRetrive():
     except:
          return {"Error": 'Error: No server name provided'}
     #verifyes that user has acesses to the server
-    res = askForUserServerList(userToken, token_type)
+    userServers = askForUserServerList(userToken, token_type)
     
+    isUserOnServer = False
+    userServerData = None
+    for server in userServers:
+        if server["id"] == serverId:
+            isUserOnServer = True
+            userServerData = server
+            break
 
-    #retrive the server settings json
-    collection = None
-    for serv in res:
-        for server in db.list_collection_names():
-            return {"isUserOnServer": server}
-            if (server == serv):
-                return {"isUserOnServer": True}
+    if isUserOnServer == False:
+        return {"ErorrCode": "userNotOnServer"}
 
-    return {"ErrorCode": 500}
+    isUserdAdmin = False
+    for server in db.list_collection_names():
+        if server == serverId:
+            #Check if has admin perms
+            if (int(userServerData["permissions"]) & 0x8) == 0x8:
+                isUserdAdmin = True
+
+    if isUserdAdmin == False:
+        return {"data": None}
+    
+    # Gets data of server setting and sends it to the client
+    return {"data": "aaffaf"}
+
+
+    
+    
+    
+    # for serv in userServers:
+    #     for server in db.list_collection_names():
+    #         if server == serv["id"]:
+    #             if (int(serv["permissions"]) & 0x8) == 0x8:
+    #                 isUserOnServerandAdmin = False
+    # if isUserOnServerandAdmin == None:
+    #     isUserOnServerandAdmin = True
+    # #retrive the server settings json
+    # if isUserOnServerandAdmin ==  False:
+    #     return {"serverSettings": None}
+    # return {"serverSettings": isUserOnServerandAdmin}
 
 if __name__ == '__main__':
     app.run(debug=True)
