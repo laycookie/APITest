@@ -18,11 +18,6 @@ export default function ServerDashBoard({
   tokenData: any;
 }) {
   const dashBoardOfAllServers = useRef<HTMLUListElement>(null);
-  useEffect(() => {
-    if (servers.length != 0) {
-      console.log(servers);
-    }
-  }, [servers]);
 
   useEffect(() => {
     if (dashBoardOfAllServers === null) return;
@@ -32,7 +27,6 @@ export default function ServerDashBoard({
           const serverEl = document.createElement("li");
           const serverNameEl = document.createElement("h5");
           const serverButtonEl = document.createElement("button");
-          console.log(data);
           if (data.ServerName === null) {
             serverNameEl.innerHTML = server.name;
             serverButtonEl.innerHTML = "Add to server";
@@ -47,7 +41,6 @@ export default function ServerDashBoard({
             serverNameEl.innerHTML = server.name;
             serverButtonEl.innerHTML = "Settings";
             serverButtonEl.addEventListener("click", () => {
-              console.log("UPDATE TO SETTINGS");
               fetch(
                 `/serverRetrive?serverId=${server.id}&userToken=${tokenData.access_token}&token_type=${tokenData.token_type}`
               ).then((res) => {
