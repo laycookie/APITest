@@ -97,26 +97,16 @@ def serverRetrive():
                 isUserdAdmin = True
 
     if isUserdAdmin == False:
-        return {"data": None}
+        return {"ErorrCode": "UserNotAdmin"}
     
     # Gets data of server setting and sends it to the client
-    return {"data": "aaffaf"}
+    try:
+        serverSettingDict = db[serverId].find_one()
+        jsonServerSetting = jsonify( data=serverSettingDict["commands"])
+        return jsonServerSetting
+    except:
+        return {"ErorrCode": "Something went wrong"}
 
-
-    
-    
-    
-    # for serv in userServers:
-    #     for server in db.list_collection_names():
-    #         if server == serv["id"]:
-    #             if (int(serv["permissions"]) & 0x8) == 0x8:
-    #                 isUserOnServerandAdmin = False
-    # if isUserOnServerandAdmin == None:
-    #     isUserOnServerandAdmin = True
-    # #retrive the server settings json
-    # if isUserOnServerandAdmin ==  False:
-    #     return {"serverSettings": None}
-    # return {"serverSettings": isUserOnServerandAdmin}
 
 if __name__ == '__main__':
     app.run(debug=True)
