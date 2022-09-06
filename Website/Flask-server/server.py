@@ -107,6 +107,11 @@ def serverRetrive():
     except:
         return {"ErorrCode": "Something went wrong"}
 
+@app.route('/submitServerSettings', methods = ['POST'])
+def submitServerSettings():
+    newData = request.json
+    print(newData["commands"])
+    return ('', 204)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactDom from "react-dom";
+import ServerSettingPage from "./ServerSettingPage";
 
 interface guilds {
   features: any[];
@@ -17,9 +17,11 @@ export default function ServerDashBoard({
   servers: guilds[];
   tokenData: any;
 }) {
+  const [serverData, setServerData] = useState(null);
   const dashBoardOfAllServers = useRef<HTMLUListElement>(null);
+  const [pageHidden, setPageHidden] = useState(false);
 
-  useEffect(() => {
+  function featchServerList(): void {
     if (dashBoardOfAllServers === null) return;
     servers.map((server: guilds) => {
       fetch(`/serverData?serverId=${server.id}`).then((res) =>
@@ -45,7 +47,8 @@ export default function ServerDashBoard({
                 `/serverRetrive?serverId=${server.id}&userToken=${tokenData.access_token}&token_type=${tokenData.token_type}`
               ).then((res) => {
                 res.json().then((data) => {
-                  console.log(data);
+                  const serverData: any = { LocalServerData: server, db: data };
+                  setServerData(serverData);
                 });
               });
             });
@@ -56,12 +59,35 @@ export default function ServerDashBoard({
         })
       );
     });
+  }
+
+  // makes sure that pages load on user signing in.
+  useEffect(() => {
+    featchServerList();
+    setPageHidden(false);
   }, [dashBoardOfAllServers, servers]);
+
+  // makes sure that pages load on user saving settings.
+  useEffect(() => {
+    if (pageHidden) return;
+    featchServerList();
+    setPageHidden(true);
+  }, [serverData]);
 
   return (
     <div>
-      <h1>Servers</h1>
-      <ul ref={dashBoardOfAllServers}></ul>
+      {serverData ? (
+        <ServerSettingPage
+          serverData={serverData}
+          setServerData={setServerData}
+          setPageHidden={setPageHidden}
+        />
+      ) : (
+        <>
+          <h1>Servers</h1>
+          <ul ref={dashBoardOfAllServers}></ul>
+        </>
+      )}
     </div>
   );
 }
