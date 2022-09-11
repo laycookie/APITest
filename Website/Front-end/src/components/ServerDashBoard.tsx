@@ -81,6 +81,7 @@ export default function ServerDashBoard({
           serverData={serverData}
           setServerData={setServerData}
           setPageHidden={setPageHidden}
+          tokenData={tokenData}
         />
       ) : (
         <>

@@ -13,29 +13,25 @@ const permissions: string[] = [];
 const execute = async (interaction: ChatInputCommandInteraction<CacheType>) => {
     const time = new Date();
     await interaction.deferReply();
-
-    let pingResFromDb: string | null = null;
+    if (interaction.guildId == null) {
+        throw Error("ping command guildId is null");
+    }
     await database
-        .collection("LAYSCORD")
+        .collection(interaction.guildId)
         .find()
         .forEach((json) => {
-            pingResFromDb = json.commands.pingRes;
-            if (pingResFromDb === null) {
-                interaction.editReply(
-                    "Something went wrong with the database.",
-                );
-            } else {
-                interaction.editReply(pingResFromDb);
+            const pingResFromDb: string = json.commands.pingRes;
+            interaction.editReply(pingResFromDb);
+
+            try {
+                const ms =
+                    time.getMilliseconds() - new Date().getMilliseconds();
+                interaction.editReply(`${pingResFromDb} \n${ms} ms`);
+            } catch {
+                interaction.editReply("PingCommand is unavailable.");
+                throw new Error("Something dum had happened in ping.ts");
             }
         });
-
-    try {
-        const ms = time.getMilliseconds() - new Date().getMilliseconds();
-        await interaction.editReply(`${pingResFromDb} \n${ms} ms`);
-    } catch {
-        await interaction.editReply("PingCommand is unavailable.");
-        throw new Error("Something dum had happened in ping.ts");
-    }
 };
 
 export { name, description, permissions, execute };

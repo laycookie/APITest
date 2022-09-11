@@ -4,15 +4,19 @@ export default function ServerSettingPage({
   serverData,
   setServerData,
   setPageHidden,
+  tokenData,
 }: {
   serverData: any;
   setServerData: any;
   setPageHidden: any;
+  tokenData: any;
 }) {
   function submitForm(event: any): void {
     const postData = {
       serverName: serverData.LocalServerData.name,
       serverId: serverData.LocalServerData.id,
+      uesrToken: tokenData.access_token,
+      tokenType: tokenData.token_type,
       commands: {
         pingRes: event.target.elements.pingRes.value,
       },

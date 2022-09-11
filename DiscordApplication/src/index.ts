@@ -53,8 +53,6 @@ client.on("guildCreate", (guild) => {
     console.log(
         `Hello, I'm LMAOBOT. Thanks for inviting me, here are a list of all my commands! :alien:`,
     );
-
-    const newServer = guild;
     ifDBExistElseCreate(guild);
 });
 

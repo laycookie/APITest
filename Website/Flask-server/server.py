@@ -110,7 +110,46 @@ def serverRetrive():
 @app.route('/submitServerSettings', methods = ['POST'])
 def submitServerSettings():
     newData = request.json
-    print(newData["commands"])
+
+    client = pymongo.MongoClient(botInfo["mongoDBURI"])
+    try:
+        db = client["DiscordServerList"]
+    except:
+         return {"Error": 'Error: No server name provided'}
+    # Verifying that user is admin on the server
+    userServers = askForUserServerList(newData["uesrToken"], newData["tokenType"])
+    
+    isUserOnServer = False
+    userServerData = None
+    for server in userServers:
+        if server["id"] == newData["serverId"]:
+            isUserOnServer = True
+            userServerData = server
+            break
+
+    if isUserOnServer == False:
+        return {"ErorrCode": "userNotOnServer"}
+
+    isUserdAdmin = False
+    for server in db.list_collection_names():
+        if server == newData["serverId"]:
+            #Check if has admin perms
+            if (int(userServerData["permissions"]) & 0x8) == 0x8:
+                isUserdAdmin = True
+
+    if isUserdAdmin == False:
+        return {"ErorrCode": "UserNotAdmin"}
+    
+    # sending data to db
+    for command in newData["commands"].keys():
+        infoFromDB = db[newData["serverId"]].find_one({"commands." + command: {"$exists": True}})
+        if infoFromDB == None:
+            return ('Error', 500)
+        query = {"commands." + command: infoFromDB["commands"][command]}
+        newVal = {'$set': {"commands." + command: newData["commands"][command]}}
+        db[newData["serverId"]].update_one(query, newVal)
+
+    print(str(newData))
     return ('', 204)
 
 if __name__ == '__main__':
