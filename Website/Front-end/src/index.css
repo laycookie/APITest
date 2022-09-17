@@ -1,0 +1,42 @@
+body {
+  background-color: #222230;
+}
+
+h1 {
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+}
+
+p {
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+}
+
+li {
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+}
+
+button {
+  background-color: #222230;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  padding: 0.4rem;
+  border-style: solid;
+  border-color: #fff;
+}
+
+button:hover {
+  background-color: #fff;
+  color: #222230;
+  transition: 0.1s;
+}
+
+input {
+  background-color: #222230;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  padding: 0.4rem;
+  border-style: solid;
+  border-color: #fff;
+}

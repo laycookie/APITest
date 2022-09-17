@@ -1,0 +1,4 @@
+To run back end run those commands
+cd ./Website/Flask-server
+(launch venv on windows with this command) \venv\Scripts\activate
+python server.py
